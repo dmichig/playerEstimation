@@ -18,6 +18,9 @@ class App(tk.Frame):
     def estimate_price(self):
         pass
 
+    def create_widgets_for_gk(self):
+        pass
+
 
 
     def create_widgets(self):
