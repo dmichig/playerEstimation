@@ -4,19 +4,19 @@ class fileRead:
 
     def __init__(self):
         with open('players_20.csv', encoding='utf8') as data:
-            players = csv.reader(data, delimiter=',')
+            self.players = csv.reader(data, delimiter=',')
 
-            goalkeepers = list()
-            goalkeepers_overalls = list()
-            goalkeepers_values = list()
-            field_players = list()
-            field_players_overalls = list()
-            field_players_values = list()
+            self.goalkeepers = list()
+            self.goalkeepers_overalls = list()
+            self.goalkeepers_values = list()
+            self.field_players = list()
+            self.field_players_overalls = list()
+            self.field_players_values = list()
 
             row_number = 0
             column_number = 0
 
-            for row in players:
+            for row in self.players:
                 if row_number == 0:
                     for column in row:
                         if column == 'player_positions':
@@ -61,9 +61,9 @@ class fileRead:
                         player_attributes.append(int(row[gk_positioning]))
                         player_overall = int(row[overall])
                         player_value = int(row[value_eur])
-                        goalkeepers.append(player_attributes)
-                        goalkeepers_overalls.append(player_overall)
-                        goalkeepers_values.append(player_value)
+                        self.goalkeepers.append(player_attributes)
+                        self.goalkeepers_overalls.append(player_overall)
+                        self.goalkeepers_values.append(player_value)
                     else:
                         player_attributes.append(int(row[pace]))
                         player_attributes.append(int(row[shooting]))
@@ -73,8 +73,8 @@ class fileRead:
                         player_attributes.append(int(row[physic]))
                         player_overall = int(row[overall])
                         player_value = int(row[value_eur])
-                        field_players.append(player_attributes)
-                        field_players_overalls.append(player_overall)
-                        field_players_values.append(player_value)
+                        self.field_players.append(player_attributes)
+                        self.field_players_overalls.append(player_overall)
+                        self.field_players_values.append(player_value)
 
                 row_number += 1

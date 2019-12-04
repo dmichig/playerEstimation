@@ -1,8 +1,6 @@
 import tkinter as tk
 import fileRead
-
-import os
-import sys
+from sklearn.linear_model import LinearRegression
 
 class App(tk.Frame):
 
@@ -14,15 +12,28 @@ class App(tk.Frame):
         self.gk_speed = int(self.gk_speed_entry.get())
         self.gk_positioning = int(self.gk_positioning_entry.get())
 
-        print(self.gk_positioning)
-
         if ((self.gk_diving > 0 and self.gk_diving < 100) and
             (self.gk_handling > 0 and self.gk_handling < 100) and
             (self.gk_kicking > 0 and self.gk_kicking < 100) and
             (self.gk_reflexes > 0 and self.gk_reflexes < 100) and
             (self.gk_speed > 0 and self.gk_speed < 100) and
             (self.gk_positioning > 0 and self.gk_positioning < 100)):
-                pass
+
+                self.entered_values = [[self.gk_diving, self.gk_handling, self.gk_kicking, self.gk_reflexes,
+                                        self.gk_speed, self.gk_positioning]]
+
+                self.overall_predictor = LinearRegression(n_jobs=-1)
+                self.value_predictor = LinearRegression(n_jobs=-1)
+
+                self.overall_predictor.fit(X=self.fifa20.goalkeepers, y=self.fifa20.goalkeepers_overalls)
+                self.value_predictor.fit(X=self.fifa20.goalkeepers, y=self.fifa20.goalkeepers_values)
+
+                self.estimated_overall = self.overall_predictor.predict(X=self.entered_values)
+                self.estimated_value = self.value_predictor.predict(X=self.entered_values)
+
+                self.estimated_overall_label = tk.Label(text="Estimated overall rate: {}".format(int(self.estimated_overall))).grid(row=10, column=1)
+                self.estimated_value_label = tk.Label(text="Estimated player value (in EUR): {}".format(int(self.estimated_value))).grid(row=11, column=1)
+
         else:
             self.new_window = tk.Toplevel(master=self)
             self.new_window.geometry("300x300")
@@ -32,7 +43,46 @@ class App(tk.Frame):
             self.quit_button = tk.Button(master=self.new_window, text='Close window', command=self.new_window.destroy).grid(row=1, column=0)
 
     def estimate_fp(self):
-        pass
+        self.fp_pace = int(self.fp_pace_entry.get())
+        self.fp_shooting = int(self.fp_shooting_entry.get())
+        self.fp_passing = int(self.fp_passing_entry.get())
+        self.fp_dribbling = int(self.fp_dribbling_entry.get())
+        self.fp_defending = int(self.fp_defending_entry.get())
+        self.fp_physic = int(self.fp_physic_entry.get())
+
+        if ((self.fp_pace > 0 and self.fp_pace < 100) and
+                (self.fp_shooting > 0 and self.fp_shooting < 100) and
+                (self.fp_passing > 0 and self.fp_passing < 100) and
+                (self.fp_dribbling > 0 and self.fp_dribbling < 100) and
+                (self.fp_defending > 0 and self.fp_defending < 100) and
+                (self.fp_physic > 0 and self.fp_physic < 100)):
+
+            self.entered_values = [[self.fp_pace, self.fp_shooting, self.fp_passing, self.fp_dribbling,
+                                    self.fp_defending, self.fp_physic]]
+
+            self.overall_predictor = LinearRegression(n_jobs=-1)
+            self.value_predictor = LinearRegression(n_jobs=-1)
+
+            self.overall_predictor.fit(X=self.fifa20.field_players, y=self.fifa20.field_players_overalls)
+            self.value_predictor.fit(X=self.fifa20.field_players, y=self.fifa20.field_players_values)
+
+            self.estimated_overall = self.overall_predictor.predict(X=self.entered_values)
+            self.estimated_value = self.value_predictor.predict(X=self.entered_values)
+
+            self.estimated_overall_label = tk.Label(
+                text="Estimated overall rate: {}".format(int(self.estimated_overall))).grid(row=10, column=1)
+            self.estimated_value_label = tk.Label(
+                text="Estimated player value (in EUR): {}".format(int(self.estimated_value))).grid(row=11, column=1)
+
+        else:
+            self.new_window = tk.Toplevel(master=self)
+            self.new_window.geometry("300x300")
+            self.new_window.title("ERROR!!!")
+
+            self.error_label = tk.Label(master=self.new_window, text='Entered value must be in range 1 to 99!').grid(
+                row=0, column=0)
+            self.quit_button = tk.Button(master=self.new_window, text='Close window',
+                                         command=self.new_window.destroy).grid(row=1, column=0)
 
     def create_widgets_for_gk(self):
         self.dummy_space3 = tk.Label(text='  ').grid(row=2, column=0)

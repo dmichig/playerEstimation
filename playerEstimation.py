@@ -1,4 +1,3 @@
-import sys
 import gui
 import tkinter as tk
 
